@@ -1,0 +1,47 @@
+use strict;
+
+use List::Varier;
+
+# This program finds all the ways that you can trace a word in a 3x3 square without lifting a finger
+
+# 012
+# 345
+# 678
+
+my @is_adjacent = ( [0,1,0,1,1,0,0,0,0],	# 0
+		    [1,0,1,1,1,1,0,0,0],   	# 1
+		    [0,1,0,0,1,1,0,0,0],	# 2
+		    [1,1,0,0,1,0,1,1,0],	# 3
+		    [1,1,1,1,0,1,1,1,1],	# 4
+		    [0,1,1,0,1,0,0,1,1],	# 5
+		    [0,0,0,1,1,0,0,1,0],	# 6
+		    [0,0,0,1,1,0,0,1,0],	# 7
+		    [0,0,0,0,1,1,0,1,0]); 	# 8
+
+my $total_count;
+
+for(my $word_length=3; $word_length<=9; $word_length++){
+    my $length_count;
+    print "LENGTH=$word_length\n";
+    my $v = new List::Varier($word_length, [0 .. 8]);
+    while(my @word = $v->next){
+	if(is_writeable(\@word)){
+	    $length_count++;
+	    $total_count++;
+	    print "@word\n";
+	}
+    }
+    print "Count for $word_length length: $length_count\n\n";
+}
+
+print "TOTAL: $total_count\n";
+
+sub is_writeable {
+    my $word = shift;
+#    print "TEST: @$word\n";
+
+    for(my $i=1; $i<@$word; $i++){
+	return 0 unless $is_adjacent[$word->[$i-1]][$word->[$i]];
+    }
+    return 1;
+}
